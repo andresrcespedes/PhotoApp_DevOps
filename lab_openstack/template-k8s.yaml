@@ -1,72 +1,90 @@
 heat_template_version: rocky
 
 parameters:
-  name:
-    type: string
   flavor:
     type: string
-  network_port:
+  security_group:
     type: string
-  ssh_keys:
-    type: comma_delimited_list
+  network_id:
+    type: string
+  subnet_id:
+    type: string
 
 
 resources:
-  ssh_keys_config:
-    # cloud init resource
-    type: OS::Heat::CloudConfig
+
+  controller_port:
+    type: OS::Neutron::Port
     properties:
-      cloud_config:
-        manage_etc_hosts: true
-        users:
-          - name: ubuntu
-            sudo: ALL=(ALL) NOPASSWD:ALL
-            shell: /bin/bash
-            ssh_authorized_keys: { get_param: ssh_keys }
+      network_id: {get_param: network_id}
+      security_groups: 
+        - get_param: security_group
+      fixed_ips:
+        - subnet_id: {get_param: subnet_id}
+          ip_address: 192.168.10.31
 
-
-  init_script:
-    type: OS::Heat::SoftwareConfig
-    properties:
-      group: ungrouped
-      config: |
-        #!/bin/bash
-        export IP=$(/sbin/ip -o -4 addr list ens3 | awk '{print $4}' | cut -d/ -f1)
-        export HOSTNAME=`hostname`
-        tee -a /etc/hosts <<EOF
-        $IP $HOSTNAME
-        EOF
-        export DEBIAN_FRONTEND=noninteractive
-        export TERM="xterm"
-        echo 'Acquire::http::Proxy "http://apt-cacher-01.priv.enst-bretagne.fr:3142";' > /etc/apt/apt.conf.d/01proxy
-        echo 'Acquire::http::Proxy "http://apt-cacher-01.priv.enst-bretagne.fr:3142";' > /etc/apt/apt.conf
-        apt-get -y update
-        apt-get -y upgrade
-        apt-get -y install python
-        localectl set-locale LANG=en_US.UTF-8 LANGUAGE="en_US:en"
-        tee -a /etc/profile <<EOF
-        export http_proxy=http://proxy.enst-bretagne.fr:8080
-        export https_proxy=http://proxy.enst-bretagne.fr:8080
-        export no_proxy="127.0.0.1, localhost, registry.cloud.rennes.enst-bretagne.fr, gitlab-devops.cloud.rennes.enst-bretagne.fr, openstack.imt-atlantique.fr, gitlab.imt-atlantique.fr, 10.233.0.0/16, `echo 192.168.10.{1..253},` 192.168.10.254"
-        EOF
-        reboot
-
-
-  server_init:
-    type: OS::Heat::MultipartMime
-    properties:
-      parts:
-      - config: {get_resource: ssh_keys_config}
-      - config: {get_resource: init_script}
-
-  server:
+  controller:
     type: OS::Nova::Server
     properties:
-      name: {get_param: name}
+      name: k8s-cont
       image: ubuntu-20.04
       flavor: {get_param: flavor}
       networks:
-        - port: { get_param: network_port}
-      user_data_format: RAW
-      user_data:
-        get_resource: server_init
+        - port: {get_resource: controller_port}
+
+  worker1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: {get_param: network_id}
+      security_groups: 
+        - get_param: security_group
+      fixed_ips:
+        - subnet_id: {get_param: subnet_id}
+          ip_address: 192.168.10.41
+
+  worker1:
+    type: OS::Nova::Server
+    properties:
+      name: k8s-worker-1
+      image: ubuntu-20.04
+      flavor: {get_param: flavor}
+      networks:
+        - port: {get_resource: worker1_port}
+
+  worker2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: {get_param: network_id}
+      security_groups: 
+        - get_param: security_group
+      fixed_ips:
+        - subnet_id: {get_param: subnet_id}
+          ip_address: 192.168.10.42
+
+  worker2:
+    type: OS::Nova::Server
+    properties:
+      name: k8s-worker-2
+      image: ubuntu-20.04
+      flavor: {get_param: flavor}
+      networks:
+        - port: {get_resource: worker2_port}
+
+  worker3_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: {get_param: network_id}
+      security_groups: 
+        - get_param: security_group
+      fixed_ips:
+        - subnet_id: {get_param: subnet_id}
+          ip_address: 192.168.10.43
+
+  worker3:
+    type: OS::Nova::Server
+    properties:
+      name: k8s-worker-3
+      image: ubuntu-20.04
+      flavor: {get_param: flavor}
+      networks:
+        - port: {get_resource: worker3_port}
