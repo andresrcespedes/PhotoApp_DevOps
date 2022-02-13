@@ -111,7 +111,7 @@ resources:
       port_id: { get_resource: bastion_port }
 
   bastion:
-    type: template-common.yaml
+    type: vm-template.yaml
     properties:
       name: bastion
       flavor: s10.medium
