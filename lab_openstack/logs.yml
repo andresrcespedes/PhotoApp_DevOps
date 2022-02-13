@@ -1,72 +1,25 @@
 heat_template_version: rocky
 
 parameters:
-  name:
-    type: string
-  flavor:
-    type: string
-  network_port:
-    type: string
   ssh_keys:
     type: comma_delimited_list
 
-
 resources:
-  ssh_keys_config:
-    # cloud init resource
-    type: OS::Heat::CloudConfig
+
+  logs_port:
+    type: OS::Neutron::Port
     properties:
-      cloud_config:
-        manage_etc_hosts: true
-        users:
-          - name: ubuntu
-            sudo: ALL=(ALL) NOPASSWD:ALL
-            shell: /bin/bash
-            ssh_authorized_keys: { get_param: ssh_keys }
+      network_id: private_net
+      security_groups:
+        - internal_security_group
+      fixed_ips:
+        - subnet_id: private_subnet
+          ip_address: 192.168.10.61
 
-
-  init_script:
-    type: OS::Heat::SoftwareConfig
+  logs:
+    type: vm-template.yaml
     properties:
-      group: ungrouped
-      config: |
-        #!/bin/bash
-        export IP=$(/sbin/ip -o -4 addr list ens3 | awk '{print $4}' | cut -d/ -f1)
-        export HOSTNAME=`hostname`
-        tee -a /etc/hosts <<EOF
-        $IP $HOSTNAME
-        EOF
-        export DEBIAN_FRONTEND=noninteractive
-        export TERM="xterm"
-        echo 'Acquire::http::Proxy "http://apt-cacher-01.priv.enst-bretagne.fr:3142";' > /etc/apt/apt.conf.d/01proxy
-        echo 'Acquire::http::Proxy "http://apt-cacher-01.priv.enst-bretagne.fr:3142";' > /etc/apt/apt.conf
-        apt-get -y update
-        apt-get -y upgrade
-        apt-get -y install python
-        localectl set-locale LANG=en_US.UTF-8 LANGUAGE="en_US:en"
-        tee -a /etc/profile <<EOF
-        export http_proxy=http://proxy.enst-bretagne.fr:8080
-        export https_proxy=http://proxy.enst-bretagne.fr:8080
-        export no_proxy="127.0.0.1, localhost, registry.cloud.rennes.enst-bretagne.fr, gitlab-devops.cloud.rennes.enst-bretagne.fr, openstack.imt-atlantique.fr, gitlab.imt-atlantique.fr, 10.233.0.0/16, `echo 192.168.10.{1..253},` 192.168.10.254"
-        EOF
-        reboot
-
-
-  server_init:
-    type: OS::Heat::MultipartMime
-    properties:
-      parts:
-      - config: {get_resource: ssh_keys_config}
-      - config: {get_resource: init_script}
-
-  server:
-    type: OS::Nova::Server
-    properties:
-      name: {get_param: name}
-      image: ubuntu-20.04
-      flavor: {get_param: flavor}
-      networks:
-        - port: { get_param: network_port}
-      user_data_format: RAW
-      user_data:
-        get_resource: server_init
+      name: elastic
+      flavor: s20.xlarge
+      network_port: {get_resource: logs_port}
+      ssh_keys: {get_param: ssh_keys}
