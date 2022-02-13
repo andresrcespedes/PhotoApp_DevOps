@@ -115,16 +115,5 @@ resources:
     properties:
       name: bastion
       flavor: s10.medium
-      network_port: { get_resource: bastion_port}
+      network_port: {get_resource: bastion_port}
       ssh_keys: {get_param: ssh_keys}
-
-  # ==================================================
-  # KUBERNETES
-  # ==================================================
-  k8s:
-    type: template-k8s.yaml
-    properties:
-      flavor: s10.large
-      security_group: {get_resource: internal_security_group}
-      network_id: {get_resource: private_net}
-      subnet_id: {get_resource: private_subnet}

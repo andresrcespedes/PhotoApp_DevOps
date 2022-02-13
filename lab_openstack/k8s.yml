@@ -1,90 +1,79 @@
 heat_template_version: rocky
 
 parameters:
-  flavor:
-    type: string
-  security_group:
-    type: string
-  network_id:
-    type: string
-  subnet_id:
-    type: string
-
+  ssh_keys:
+    type: comma_delimited_list
 
 resources:
 
   controller_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_param: network_id}
+      network_id: {get_resource: private_net}
       security_groups: 
-        - get_param: security_group
+        - get_resource: internal_security_group
       fixed_ips:
-        - subnet_id: {get_param: subnet_id}
+        - subnet_id: {get_resource: private_subnet}
           ip_address: 192.168.10.31
 
   controller:
-    type: OS::Nova::Server
+    type: vm-template.yaml
     properties:
       name: k8s-cont
-      image: ubuntu-20.04
-      flavor: {get_param: flavor}
-      networks:
-        - port: {get_resource: controller_port}
+      flavor: s10.large
+      network_port: {get_resource: controller_port}
+      ssh_keys: {get_param: ssh_keys}
 
   worker1_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_param: network_id}
+      network_id: {get_resource: private_net}
       security_groups: 
-        - get_param: security_group
+        - get_resource: internal_security_group
       fixed_ips:
-        - subnet_id: {get_param: subnet_id}
+        - subnet_id: {get_resource: private_subnet}
           ip_address: 192.168.10.41
 
   worker1:
-    type: OS::Nova::Server
+    type: vm-template.yaml
     properties:
       name: k8s-worker-1
-      image: ubuntu-20.04
-      flavor: {get_param: flavor}
-      networks:
-        - port: {get_resource: worker1_port}
+      flavor: s10.large
+      network_port: {get_resource: worker1_port}
+      ssh_keys: {get_param: ssh_keys}
 
   worker2_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_param: network_id}
+      network_id: {get_resource: private_net}
       security_groups: 
-        - get_param: security_group
+        - get_resource: internal_security_group
       fixed_ips:
-        - subnet_id: {get_param: subnet_id}
+        - subnet_id: {get_resource: private_subnet}
           ip_address: 192.168.10.42
 
   worker2:
-    type: OS::Nova::Server
+    type: vm-template.yaml
     properties:
       name: k8s-worker-2
-      image: ubuntu-20.04
-      flavor: {get_param: flavor}
-      networks:
-        - port: {get_resource: worker2_port}
+      flavor: s10.large
+      network_port: {get_resource: worker2_port}
+      ssh_keys: {get_param: ssh_keys}
 
   worker3_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_param: network_id}
+      network_id: {get_resource: private_net}
       security_groups: 
-        - get_param: security_group
+        - get_resource: internal_security_group
       fixed_ips:
-        - subnet_id: {get_param: subnet_id}
+        - subnet_id: {get_resource: private_subnet}
           ip_address: 192.168.10.43
 
   worker3:
-    type: OS::Nova::Server
+    type: vm-template.yaml
     properties:
       name: k8s-worker-3
-      image: ubuntu-20.04
-      flavor: {get_param: flavor}
-      networks:
-        - port: {get_resource: worker3_port}
+      flavor: s10.large
+      network_port: {get_resource: worker3_port}
+      ssh_keys: {get_param: ssh_keys}
