@@ -9,11 +9,11 @@ resources:
   controller_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_resource: private_net}
-      security_groups: 
-        - get_resource: internal_security_group
+      network_id: private_net
+      security_groups:
+        - internal_security_group
       fixed_ips:
-        - subnet_id: {get_resource: private_subnet}
+        - subnet_id: private_subnet
           ip_address: 192.168.10.31
 
   controller:
@@ -27,11 +27,11 @@ resources:
   worker1_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_resource: private_net}
-      security_groups: 
-        - get_resource: internal_security_group
+      network_id: private_net
+      security_groups:
+        - internal_security_group
       fixed_ips:
-        - subnet_id: {get_resource: private_subnet}
+        - subnet_id: private_subnet
           ip_address: 192.168.10.41
 
   worker1:
@@ -45,11 +45,11 @@ resources:
   worker2_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_resource: private_net}
-      security_groups: 
-        - get_resource: internal_security_group
+      network_id: private_net
+      security_groups:
+        - internal_security_group
       fixed_ips:
-        - subnet_id: {get_resource: private_subnet}
+        - subnet_id: private_subnet
           ip_address: 192.168.10.42
 
   worker2:
@@ -63,11 +63,11 @@ resources:
   worker3_port:
     type: OS::Neutron::Port
     properties:
-      network_id: {get_resource: private_net}
-      security_groups: 
-        - get_resource: internal_security_group
+      network_id: private_net
+      security_groups:
+        - internal_security_group
       fixed_ips:
-        - subnet_id: {get_resource: private_subnet}
+        - subnet_id: private_subnet
           ip_address: 192.168.10.43
 
   worker3:
