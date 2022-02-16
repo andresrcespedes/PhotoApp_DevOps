@@ -88,7 +88,6 @@ async def test_has_more_true_photographers():
         response3 = await ac.get('/photographers?offset=0&limit=1')
         assert response3.status_code == 200
         assert response3.json()['has_more'] == True
-<<<<<<< HEAD
 
 @pytest.mark.asyncio        
 @pytest.mark.usefixtures("clearPhotographers")
@@ -115,7 +114,3 @@ async def test_delete_empty():
                                   headers=headers_content)
         assert response1.status_code == 404
 
-
-
-=======
->>>>>>> 9a5ea6a2f89f8495c060bdc906b82d61c6b3874b

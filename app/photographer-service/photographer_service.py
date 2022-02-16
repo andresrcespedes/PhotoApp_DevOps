@@ -116,7 +116,6 @@ async def update_photographer(display_name: str = Dname.PATH_PARAM,
         raise HTTPException(status_code=503, detail="Mongo unavailable")
 
 
-<<<<<<< HEAD
 @app.delete("/photographer/{display_name}", status_code = 200)
 async def delete_photographer(display_name: str = Dname.PATH_PARAM):
     try:
@@ -129,8 +128,6 @@ async def delete_photographer(display_name: str = Dname.PATH_PARAM):
         raise HTTPException(status_code=503, detail="Mongo unavailable")
 
 
-=======
->>>>>>> 9a5ea6a2f89f8495c060bdc906b82d61c6b3874b
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
     #logger.setLevel(logging.DEBUG)
