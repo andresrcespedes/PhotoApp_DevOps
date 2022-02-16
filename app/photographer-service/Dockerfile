@@ -5,6 +5,10 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./photographer_service.py /code
 COPY ./models.py /code
 ENV MONGO_HOST 172.17.0.2
+<<<<<<< HEAD
 CMD ["uvicorn", "photographer_service:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+=======
+CMD ["uvicorn", "photographer_service:app", "--host", "0.0.0.0", "--port", "80"]
+>>>>>>> 9a5ea6a2f89f8495c060bdc906b82d61c6b3874b
 
 
