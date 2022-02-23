@@ -1,0 +1,20 @@
+Write a short text document explaining the (REST or gRPC) API of your service.
+    We are going to implement a filter photo service where the user is going to apply predetermined filters to the already uploaded photos 
+    on the photo service. The filtered photos will be uploaded to the photo service.
+
+User Interface.
+    In the user interface the users will be able to see the uploaded photos (without filters). After clicking the original photo, they would
+    be able to see the filtered version of the aforementioned image alongside the original image.
+
+Endpoints
+    /filters
+        GET to obtain the available filters
+    /filters/blur
+        POST to obtain a blured image 
+    /filters/sharpen 
+        POST to obtain a sharpened image
+    /filters/contour
+        POST to obtain the contour of an image
+
+    /photo/{display_name}/{photo_id}/versions
+        GET to obtain the filtered versions of the uploaded photos.
