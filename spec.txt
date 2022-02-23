@@ -9,18 +9,11 @@ User Interface.
 Endpoints
     /filters
         GET to obtain the available filters
-    /filters/blur
-        POST to upload a blurred image on the photo service. The image will be identified by its URI location given in the payload.
+    /filter?type={blur, sharpen, contour}
+        POST to upload a filtered image on the photo service. The image will be identified by its URI location given in the payload.
         After the filter is applied and the filtered image is uploaded, the URI location of the filtered image will be located in the 
         JSON response body. 
-    /filters/sharpen 
-        POST to upload a sharpened image on the photo service. The image will be identified by its URI location given in the payload.
-        After the filter is applied and the filtered image is uploaded, the URI location of the filtered image will be located in the 
-        JSON response body.
-    /filters/contour
-        POST to upload the contour of an image on the photo service. The image will be identified by its URI location given in the payload.
-        After the filter is applied and the filtered image is uploaded, the URI location of the filtered image will be located in the 
-        JSON response body.
 
-    /photo/{display_name}/{photo_id}/versions
-        GET to obtain the filtered versions of the uploaded photos.
+Changes to the current photo service
+    /photo/{display_name}/{photo_id}?version={all, original, blur, sharpen, contour}
+        GET to obtain a photo and all of its different versions or only a specific version (original or filtered).
