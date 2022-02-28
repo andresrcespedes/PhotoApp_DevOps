@@ -3,17 +3,50 @@ Write a short text document explaining the (REST or gRPC) API of your service.
     on the photo service. The filtered photos will be uploaded to the photo service.
 
 User Interface.
-    In the user interface the users will be able to see the uploaded photos (without filters). After clicking the original photo, they would
-    be able to see the filtered version of the aforementioned image alongside the original image.
+    In the user interface, the users will be able to see the uploaded photos (without filters). After clicking on one original photo, they will be 
+    able to see a list of the different available filters. After choosing a filter to apply, the filtered photo will be available 
+    alongside the other uploaded photos.
 
 Endpoints
     /filters
-        GET to obtain the available filters
+        GET to obtain a list of the available filters
     /filter?type={blur, sharpen, contour}
-        POST to upload a filtered image on the photo service. The image will be identified by its URI location given in the payload.
-        After the filter is applied and the filtered image is uploaded, the URI location of the filtered image will be located in the 
-        JSON response body. 
+        POST to upload a filtered image on the photo service. The image will be identified by its URI location given in the JSON payload.
+            After the filter is applied and the filtered image is uploaded, the URI location of the filtered image will be located in the 
+            JSON response body. 
+            The uploaded filterd photo will keep the same attributes given to the original photo (location, title, tags, etc.) but
+            with 2 additional attributes: original_photo_id and version, so that the original and filtered photo can be easily
+            linked and differentiated. 
 
 Changes to the current photo service
     /photo/{display_name}/{photo_id}?version={all, original, blur, sharpen, contour}
         GET to obtain a photo and all of its different versions or only a specific version (original or filtered).
+
+USE CASE 
+    1.The user has a collection of uploaded photos on the "photo sharing application".
+    2.The user wants a filtered version of one specific photo among the uploaded ones.
+    3.The user chooses (on the front-end) the photo that they want to apply the filter.
+    4.The filter service will display the name of the available filters and the user chooses one of them.
+    5.The filter service applies the filter and the filtered image is uploaded via the photo service API.
+    6.In the front-end, the user is able to see the original photo and the filtered one. 
+    7.The user can re-do the aforementioned steps in order to get a photo with a diferent filter.
+
+Example of the mongo entries of the photos 
+    Original photo entry 
+        {
+            photo_id: 4408f37d4c
+            name: name
+            location: location
+            original_photo_id: null
+            version: original
+            ...
+        }
+    Filtered photo entry
+        {
+            photo_id: 50fb0ecf72
+            name: name
+            location: location
+            original_photo_id: 4408f37d4c
+            version: blur
+            ...
+        }
