@@ -12,5 +12,5 @@ def clearPhotos():
 
 @pytest.fixture(scope="class")
 def initDB():
-    connect("photos", alias="default", host="mongo-service-test")
+    connect("photos", alias="default", host="mongo-test")
     yield
