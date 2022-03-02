@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     mongo_user: str = ""
     mongo_password: str = ""
     database_name: str = "photos"
+    auth_database_name: str = "photographers"
 
     tags_host: str = "tags-service"
     tags_port: str = "50051"
@@ -60,7 +61,8 @@ def startup_event():
     if settings.mongo_user:
         conn += f"{settings.mongo_user}:{settings.mongo_password}@"
     conn += f"{settings.mongo_host}:{settings.mongo_port}"
-    connect("photos", host=conn)
+    conn += f"/{settings.database_name}?authSource={settings.auth_database_name}"
+    connect(settings.database_name, host=conn)
     tags_client.connect(settings.tags_host + ":" + settings.tags_port)
 
 @app.post("/gallery/{display_name}", status_code=201)

@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     mongo_user: str = ""
     mongo_password: str = ""
     database_name: str = "photographers"
+    auth_database_name: str = "photographers"
 
 settings = Settings()
 
@@ -55,13 +56,9 @@ async def startup_event():
     if settings.mongo_user:
         conn += f"{settings.mongo_user}:{settings.mongo_password}@"
     conn += f"{settings.mongo_host}:{settings.mongo_port}"
+    conn += f"/{settings.database_name}?authSource={settings.auth_database_name}"
     client = motor.motor_asyncio.AsyncIOMotorClient(conn)
-    await init_beanie(database=client['photographers'], document_models=[Photographer])
-
-    # connect("devops-s21-00-photographer-db",
-    #         username="devops-s21-00-user",
-    #         password="***",
-    #         host="mongo.cloud.rennes.enst-bretagne.fr")
+    await init_beanie(database=client[settings.database_name], document_models=[Photographer])
 
 @app.get("/photographers", response_model = Photographers, status_code = 200)    
 async def get_photographers(request: Request, offset: int = 0, limit: int = 10):
@@ -99,7 +96,7 @@ async def get_photographer(display_name: str = Dname.PATH_PARAM):
             return photographer
         else:
             raise HTTPException(status_code = 404, detail = "Photographer does not exist")
-    except:
+    except pymongo.errors.ServerSelectionTimeoutError:
         raise HTTPException(status_code=503, detail="Mongo unavailable")
 
 
