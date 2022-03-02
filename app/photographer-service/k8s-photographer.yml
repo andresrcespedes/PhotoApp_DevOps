@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: photographer-service
-        image: gitlab-devops.cloud.rennes.enst-bretagne.fr:4567/user/devops-s22_xy/photographer:latest
+        image: gitlab-devops.cloud.rennes.enst-bretagne.fr:4567/a21cespe/devops-s22_03/photographer:latest
         env:
         - name: DATABASE_NAME
           value: "user-photographer-db"
