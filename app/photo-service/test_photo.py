@@ -2,6 +2,8 @@ import pytest
 from starlette.testclient import TestClient
 from bson import json_util
 from photo_service import app
+from photo_service import tags_client
+from types import SimpleNamespace
 import base64,zlib, shutil
 from io import BytesIO
 
@@ -9,15 +11,19 @@ import unittest.mock
 
 client = TestClient(app)
 
-
+@unittest.mock.patch('photo_service.tags_client')
 @unittest.mock.patch('photo_service.requests.get')
 @pytest.mark.usefixtures("clearPhotos")
 @pytest.mark.usefixtures("initDB")
-def test_post_once(requests_get):
+def test_post_once(requests_get, tags_client):
 
     # here, we force the Photographer service to return 200 OK.
     requests_get.return_value.status_code = 200
     image_file=BytesIO(base64.decodebytes(encoded_image))
+
+    # here, we force tags service to return "landscape"
+    fake_tags = SimpleNamespace(tags=['landscape'])
+    tags_client.stub.getTags.return_value = fake_tags
 
     files = {'file': image_file}
     response = client.post('/gallery/joe', files=files)
