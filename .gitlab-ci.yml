@@ -85,5 +85,7 @@ deploy_photographer:
     - sleep 10
     - kubectl describe pod photographer
     - kubectl get pod photographer
+    - kubectl get secrets
+    - kubectl get pods
   environment:
     name: production
