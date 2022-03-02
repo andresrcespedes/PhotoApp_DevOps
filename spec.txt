@@ -13,7 +13,7 @@ Endpoints
     /filter?type={blur, sharpen, contour}
         POST to upload a filtered image on the photo service. The image will be identified by its URI location given in the JSON payload.
             After the filter is applied and the filtered image is uploaded, the URI location of the filtered image will be located in the 
-            JSON response body. 
+            header of the HTTP response. 
             The uploaded filterd photo will keep the same attributes given to the original photo (location, title, tags, etc.) but
             with 2 additional attributes: original_photo_id and version, so that the original and filtered photo can be easily
             linked and differentiated. 
@@ -21,6 +21,7 @@ Endpoints
 Changes to the current photo service
     /photo/{display_name}/{photo_id}?version={all, original, blur, sharpen, contour}
         GET to obtain a photo and all of its different versions or only a specific version (original or filtered).
+        The user will have the possibility to see the list of available versions before uploading a photo.
 
 USE CASE 
     1.The user has a collection of uploaded photos on the "photo sharing application".
