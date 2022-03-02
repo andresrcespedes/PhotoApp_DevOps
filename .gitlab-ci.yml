@@ -166,3 +166,16 @@ deploy_photo:
     - ./pod_check.sh
   environment:
     name: production
+
+deploy_tags:
+  stage: deploy
+  image:
+    name: bitnami/kubectl
+    entrypoint: [""]
+  script:
+    - cd app/tags-service
+    - sed -i "s/:latest/:${CI_COMMIT_SHORT_SHA}/g" k8s-tags.yml
+    - kubectl apply -f k8s-tags.yml
+    - ./pod_check.sh
+  environment:
+    name: production
