@@ -1,0 +1,12 @@
+#!/bin/bash
+tries=0
+MAX_TRIES=9
+while [ "$(kubectl get pods -l=app='filter-service' -o jsonpath='{.items[*].status.containerStatuses[0].ready}')" != "true" ]; do
+  if [[ $tries -gt $MAX_TRIES ]]; then
+    kubectl describe pod filter
+    exit 1
+  fi
+  sleep 5
+  echo "Waiting for filter pod to be ready."
+  ((tries++))
+done
