@@ -82,7 +82,7 @@ deploy_photographer:
     - sed -i "s/:latest/:${CI_COMMIT_SHORT_SHA}/g" k8s-photographer.yml
     - kubectl apply -f k8s-photographer.yml
   after_script:
-    - sleep 10
+    - sleep 5
     # - kubectl get pod photographer
     - kubectl describe pod photographer
   environment:
