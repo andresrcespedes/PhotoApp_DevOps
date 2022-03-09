@@ -30,9 +30,9 @@ spec:
         image: gitlab-devops.cloud.rennes.enst-bretagne.fr:4567/a21cespe/devops-s22_03/photographer:latest
         env:
         - name: DATABASE_NAME
-          value: "user-photographer-db"
+          value: "g03-photographer-db"
         - name: AUTH_DATABASE_NAME
-          value: "user-photographer-db"
+          value: "g03-photographer-db"
         - name: MONGO_HOST
           value: "mongo.cloud.rennes.enst-bretagne.fr"
         - name: MONGO_USER
