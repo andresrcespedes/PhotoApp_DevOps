@@ -35,7 +35,7 @@ spec:
           value: "user-photographer-db"
         - name: MONGO_HOST
           value: "mongo.cloud.rennes.enst-bretagne.fr"
-        - name: MONGO_USERNAME
+        - name: MONGO_USER
           valueFrom:
             secretKeyRef:
               name: mongo
