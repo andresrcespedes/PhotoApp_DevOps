@@ -56,7 +56,7 @@ REQUEST_TIMEOUT = 5
 
 @app.get("/filters", status_code=200)
 async def get_filters():
-    return FILTERS
+    return list(FILTERS.keys())
 
 
 @app.post("/filter", status_code=201)
