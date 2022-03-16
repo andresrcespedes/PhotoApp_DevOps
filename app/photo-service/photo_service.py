@@ -54,6 +54,16 @@ logger.handlers = gunicorn_logger.handlers
 
 tags_client = TagsClient()
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+
+    exc_str = f'{exc}'.replace('\n', ' ').replace('   ', ' ')
+    # or logger.error(f'{exc}')
+    print(request, exc_str)
+    # logger.error(request, exc_str)
+    content = {'status_code': 10422, 'message': exc_str, 'data': None}
+    return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
 @app.on_event("startup")
 def startup_event():
     conn = f"mongodb://"
