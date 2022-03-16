@@ -2,7 +2,7 @@
 
 import uvicorn
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseSettings
 from models import Fmodel
 import requests
@@ -61,7 +61,7 @@ async def get_filters():
 
 @app.post("/filter", status_code=201)
 async def filter_(response: Response,
-                  type: Literal['blur', 'sharpen', 'contour'],
+                  type: str = Query(..., regex="blur|sharpen|contour"),
                   body: Fmodel):
 
     photo_uri = body.uri
