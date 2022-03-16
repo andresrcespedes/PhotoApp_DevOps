@@ -4,7 +4,7 @@ from PIL.ImageFilter import BLUR, CONTOUR, SHARPEN
 
 
 def blur(bytes_: str) -> Image:
-    image = Image.open(BytesIO(bytes_))
+    image = Image.open('tmp.jpeg')
     return image.filter(BLUR)
 
 
