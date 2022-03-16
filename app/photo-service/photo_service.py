@@ -2,11 +2,12 @@
 
 import uvicorn
 
-from fastapi import FastAPI, File, Form, UploadFile, HTTPException
-from starlette.responses import Response, StreamingResponse
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.exceptions import RequestValidationError
+from starlette.responses import Response
 from starlette.requests import Request
 from mongoengine import connect
-from pydantic import BaseModel, BaseSettings
+from pydantic import BaseSettings
 from fastapi.logger import logger
 import logging
 from photo_const import REQUEST_TIMEOUT, PhotoAttributesNoTags, PhotoAttributes, Photos
@@ -14,9 +15,7 @@ from photo_mongo_wrapper import *
 import requests
 import re
 
-import grpc
 import tags_pb2
-import tags_pb2_grpc
 from tags import TagsClient
 
 # photographer_service_host = 'photographer-service:80'

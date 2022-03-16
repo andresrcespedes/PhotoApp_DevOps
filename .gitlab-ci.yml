@@ -265,15 +265,15 @@ deploy_filter:
   environment:
     name: production
 
-deploy_tags:
-  stage: deploy
-  needs: []
-  image:
-    name: bitnami/kubectl
-    entrypoint: [""]
-  script:
-    - cd app/tags-service
-    - kubectl apply -f k8s-tags.yml
-    - ./pod_check.sh
-  environment:
-    name: production
+# deploy_tags:
+#   stage: deploy
+#   needs: []
+#   image:
+#     name: bitnami/kubectl
+#     entrypoint: [""]
+#   script:
+#     - cd app/tags-service
+#     - kubectl apply -f k8s-tags.yml
+#     - ./pod_check.sh
+#   environment:
+#     name: production
