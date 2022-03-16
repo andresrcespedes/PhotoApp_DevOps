@@ -17,7 +17,7 @@ stages:
 
 build_photographer:
   stage: release
-  needs: ["test_photographer"]
+  # needs: ["test_photographer"]
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -72,7 +72,7 @@ deploy_photographer:
 
 build_photo:
   stage: release
-  needs: ["test_photo"]
+  # needs: ["test_photo"]
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -156,7 +156,7 @@ deploy_photo:
 
 build_filter:
   stage: release
-  needs: ["test_filter"]
+  # needs: ["test_filter"]
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
