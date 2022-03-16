@@ -92,6 +92,9 @@ async def filter_(response: Response,
     if photo_response.status_code == requests.codes.ok:
         filtered_uri = photo_response.headers['Location']
         response.headers['Location'] = photo_service + filtered_uri
+    else:
+        print(photo_response.status_code)
+        print(photo_response.content)
 
 
 if __name__ == "__main__":
