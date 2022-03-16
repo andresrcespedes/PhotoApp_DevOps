@@ -8,6 +8,9 @@ class TagsClient:
         self.stub = None
 
     def connect(self, service_host):
-        self.channel = grpc.insecure_channel(service_host)
+        self.channel = grpc.insecure_channel(
+            service_host,
+            options=(('grpc.enable_http_proxy', 0),)
+        )
         self.stub = tags_pb2_grpc.TagsStub(self.channel)
 
