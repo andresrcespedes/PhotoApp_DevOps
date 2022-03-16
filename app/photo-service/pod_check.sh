@@ -6,7 +6,7 @@ while [ "$(kubectl get pods -l=app='photo-service' -o jsonpath='{.items[*].statu
     kubectl describe pod photo
     exit 1
   fi
-  sleep 5
+  sleep 10
   echo "Waiting for photo pod to be ready."
   ((tries++))
 done
