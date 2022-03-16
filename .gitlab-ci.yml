@@ -70,6 +70,11 @@ build_photographer:
       --destination "${CI_REGISTRY_IMAGE}/photographer:${CI_COMMIT_SHORT_SHA}"
       --build-arg HTTP_PROXY=${HTTP_PROXY}
       --build-arg HTTPS_PROXY=${HTTPS_PROXY}
+      --skip-tls-verify
+      --insecure
+      --insecure-registry
+      --insecure-pull
+      --registry-mirror registry.cloud.rennes.enst-bretagne.fr:5000
 
       # Again, HTTP(S)_PROXY needed for the docker build with kaniko
 
@@ -238,6 +243,11 @@ build_filter:
       --destination "${CI_REGISTRY_IMAGE}/photo:${CI_COMMIT_SHORT_SHA}"
       --build-arg HTTP_PROXY=${HTTP_PROXY}
       --build-arg HTTPS_PROXY=${HTTPS_PROXY}
+      --skip-tls-verify
+      --insecure
+      --insecure-registry
+      --insecure-pull
+      --registry-mirror registry.cloud.rennes.enst-bretagne.fr:5000
 
       # Again, HTTP(S)_PROXY needed for the docker build with kaniko
 
