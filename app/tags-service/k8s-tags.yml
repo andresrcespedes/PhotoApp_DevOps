@@ -7,7 +7,7 @@ spec:
     app: tags-service
   ports:
   - protocol: TCP
-    port: 80
+    port: 50051
 
 ---
 
