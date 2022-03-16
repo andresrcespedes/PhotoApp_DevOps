@@ -109,7 +109,7 @@ build_photo:
   variables:
     HTTP_PROXY: http://proxy.enst-bretagne.fr:8080
     HTTPS_PROXY: http://proxy.enst-bretagne.fr:8080
-    NO_PROXY: gitlab-devops.cloud.rennes.enst-bretagne.fr:4567
+    NO_PROXY: "gitlab-devops.cloud.rennes.enst-bretagne.fr:4567, registry.cloud.rennes.enst-bretagne.fr:5000"
   before_script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
@@ -188,7 +188,7 @@ build_filter:
   variables:
     HTTP_PROXY: http://proxy.enst-bretagne.fr:8080
     HTTPS_PROXY: http://proxy.enst-bretagne.fr:8080
-    NO_PROXY: gitlab-devops.cloud.rennes.enst-bretagne.fr:4567
+    NO_PROXY: "gitlab-devops.cloud.rennes.enst-bretagne.fr:4567, registry.cloud.rennes.enst-bretagne.fr:5000"
   before_script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
