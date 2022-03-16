@@ -74,9 +74,11 @@ async def filter_(response: Response,
         # use Image.frombytes
 
         bytes_in = photo.text.encode('utf-8')
-        print(bytes_in)
-        with open('tmp.jpeg', 'wb') as fp:
-            fp.write(bytes_in)
+        for attr in dir(photo):
+            print(attr, getattr(photo, attr))
+            print()
+        with open('tmpt.jpeg', 'w') as fp:
+            fp.write(photo.text)
     elif photo.status_code == requests.codes.unavailable:
         raise HTTPException(status_code=503, detail="Mongo unavailable")
     elif photo.status_code == requests.codes.not_found:
