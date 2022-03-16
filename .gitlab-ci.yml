@@ -17,6 +17,7 @@ test_photographer:
 
 build_photographer:
   stage: release
+  needs: ["test_photographer"]
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -74,6 +75,7 @@ build_photographer:
 
 deploy_photographer:
   stage: deploy
+  needs: ["build_photographer"]
   image:
     name: bitnami/kubectl
     entrypoint: [""]
@@ -99,6 +101,7 @@ test_photo:
 
 build_photo:
   stage: release
+  needs: ["test_photo"]
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -156,6 +159,7 @@ build_photo:
 
 deploy_photo:
   stage: deploy
+  needs: ["build_photo"]
   image:
     name: bitnami/kubectl
     entrypoint: [""]
@@ -169,6 +173,7 @@ deploy_photo:
 
 deploy_tags:
   stage: deploy
+  needs: []
   image:
     name: bitnami/kubectl
     entrypoint: [""]
