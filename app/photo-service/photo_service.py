@@ -6,10 +6,9 @@ from fastapi import FastAPI, File, Form, UploadFile, HTTPException
 from starlette.responses import Response, StreamingResponse
 from starlette.requests import Request
 from mongoengine import connect
-from pydantic import BaseModel,BaseSettings
+from pydantic import BaseModel, BaseSettings
 from fastapi.logger import logger
 import logging
-from PIL import Image, ImageFilter
 from photo_const import REQUEST_TIMEOUT, PhotoAttributesNoTags, PhotoAttributes, Photos
 from photo_mongo_wrapper import *
 import requests
