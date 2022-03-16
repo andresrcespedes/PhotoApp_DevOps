@@ -27,12 +27,9 @@ build_photographer:
     HTTPS_PROXY: http://proxy.enst-bretagne.fr:8080
     NO_PROXY: "gitlab-devops.cloud.rennes.enst-bretagne.fr:4567, registry.cloud.rennes.enst-bretagne.fr:5000"
   before_script:
-    - ls
-    - ls app
-    - ls app/scripts
-    - ./app/scripts/build_before_script.sh
+    - cd app/scripts
+    - ./build_before_script.sh
 
-    
   script:
     - >-
       /kaniko/executor
