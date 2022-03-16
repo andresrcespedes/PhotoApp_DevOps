@@ -12,7 +12,6 @@ from starlette.middleware.cors import CORSMiddleware
 from filters import blur, sharpen, contour
 
 from io import BytesIO
-from typing import Literal
 
 
 class Settings(BaseSettings):
@@ -61,8 +60,8 @@ async def get_filters():
 
 @app.post("/filter", status_code=201)
 async def filter_(response: Response,
-                  type: str = Query(..., regex="blur|sharpen|contour"),
-                  body: Fmodel):
+                  body: Fmodel,
+                  type: str = Query(..., regex="blur|sharpen|contour")):
 
     photo_uri = body.uri
     _, display_name, photo_id = photo_uri.split('/')
