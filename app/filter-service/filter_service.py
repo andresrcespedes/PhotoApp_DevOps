@@ -9,7 +9,10 @@ import requests
 from starlette.responses import Response
 from starlette.middleware.cors import CORSMiddleware
 from PIL import Image
-from PIL.ImageFilter import BLUR, CONTOUR, SHARPEN
+from PIL.ImageFilter import (
+    BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, EDGE_ENHANCE_MORE,
+    EMBOSS, FIND_EDGES, SMOOTH, SMOOTH_MORE, SHARPEN
+)
 
 
 class Settings(BaseSettings):
@@ -40,8 +43,15 @@ app.add_middleware(
 
 FILTERS = {
     'blur': BLUR,
-    'sharpen': SHARPEN,
     'contour': CONTOUR,
+    'detail': DETAIL,
+    'edge_enhance': EDGE_ENHANCE,
+    'edge_enhance_more': EDGE_ENHANCE_MORE,
+    'emboss': EMBOSS,
+    'find_edges': FIND_EDGES,
+    'smooth': SMOOTH,
+    'smooth_more': SMOOTH_MORE,
+    'sharpen': SHARPEN,
 }
 
 REQUEST_TIMEOUT = 5
@@ -59,7 +69,7 @@ async def get_filters():
 @app.post("/filter", status_code=201)
 async def filter_(response: Response,
                   body: Fmodel,
-                  type: str = Query(..., regex="blur|sharpen|contour")):
+                  type: str = Query(..., regex='|'.join(FILTERS.keys()))):
 
     photo_uri = body.uri
     _, display_name, photo_id = photo_uri.split('/')
