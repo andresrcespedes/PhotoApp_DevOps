@@ -3,9 +3,9 @@ from PIL import Image
 from PIL.ImageFilter import BLUR, CONTOUR, SHARPEN
 
 
-def blur(bytes_: str) -> Image:
+def blur(bytes_: str) -> None:
     image = Image.open('tmp.jpeg')
-    return image.filter(BLUR)
+    image.filter(BLUR).save('tmp_filtered.jpeg')
 
 
 def contour(bytes_: str) -> Image:

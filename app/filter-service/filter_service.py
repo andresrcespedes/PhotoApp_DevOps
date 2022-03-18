@@ -79,13 +79,12 @@ async def filter_(response: Response,
         raise HTTPException(status_code=404, detail="Photo Not Found")
 
     # filter the obtained image
-    filtered = FILTERS[type](photo.content)
-
-    bytes_out = filtered.tobytes()
+    FILTERS[type](photo.content)
 
     # its missing information about the filter applied and original photo
     photo_response = requests.post(f'{photo_service}/gallery/{display_name}',
-                                   files={'file': bytes_out},
+                                   files={'file': open('tmp_filtered.jpeg',
+                                                       'rb')},
                                    timeout=REQUEST_TIMEOUT)
     if photo_response.status_code == requests.codes.ok:
         filtered_uri = photo_response.headers['Location']
