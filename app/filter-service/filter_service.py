@@ -87,7 +87,7 @@ async def filter_(response: Response,
 
     # its missing information about the filter applied and original photo
     photo_response = requests.post(f'{photo_service}/gallery/{display_name}',
-                                   files={'upload_file': BytesIO(bytes_out)},
+                                   files={'file': BytesIO(bytes_out)},
                                    timeout=REQUEST_TIMEOUT)
     if photo_response.status_code == requests.codes.ok:
         filtered_uri = photo_response.headers['Location']
