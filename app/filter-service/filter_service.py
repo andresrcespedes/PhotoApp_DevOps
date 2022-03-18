@@ -8,8 +8,8 @@ from models import Fmodel
 import requests
 from starlette.responses import Response
 from starlette.middleware.cors import CORSMiddleware
-
-from filters import blur, sharpen, contour
+from PIL import Image
+from PIL.ImageFilter import BLUR, CONTOUR, SHARPEN
 
 
 class Settings(BaseSettings):
@@ -39,9 +39,9 @@ app.add_middleware(
 )
 
 FILTERS = {
-    'blur': blur,
-    'sharpen': sharpen,
-    'contour': contour,
+    'blur': BLUR,
+    'sharpen': SHARPEN,
+    'contour': CONTOUR,
 }
 
 REQUEST_TIMEOUT = 5
@@ -66,27 +66,27 @@ async def filter_(response: Response,
 
     photo = requests.get(f'{photo_service}/{photo_uri}',
                          timeout=REQUEST_TIMEOUT)
-    if photo.status_code == requests.codes.ok:
-        # options
-        # write the bytes in a temp file (last resort)
-        # use Image.frombytes
+    if photo.status_code != requests.codes.ok:
+        if photo.status_code == requests.codes.unavailable:
+            raise HTTPException(status_code=503, detail="Mongo unavailable")
+        if photo.status_code == requests.codes.not_found:
+            raise HTTPException(status_code=404, detail="Photo Not Found")
 
-        with open('tmp.jpeg', 'wb') as fp:
-            fp.write(photo.content)
-    elif photo.status_code == requests.codes.unavailable:
-        raise HTTPException(status_code=503, detail="Mongo unavailable")
-    elif photo.status_code == requests.codes.not_found:
-        raise HTTPException(status_code=404, detail="Photo Not Found")
+    # save original as file
+    with open('tmp_original.jpeg', 'wb') as fp:
+        fp.write(photo.content)
 
-    # filter the obtained image
-    FILTERS[type](photo.content)
+    # filter the obtained image and save
+    Image.open('tmp_original.jpeg') \
+         .filter(FILTERS[type]) \
+         .save('tmp_filtered.jpeg')
 
     # its missing information about the filter applied and original photo
     photo_response = requests.post(f'{photo_service}/gallery/{display_name}',
                                    files={'file': open('tmp_filtered.jpeg',
                                                        'rb')},
                                    timeout=REQUEST_TIMEOUT)
-    if photo_response.status_code == requests.codes.ok:
+    if photo_response.status_code == requests.codes.created:
         filtered_uri = photo_response.headers['Location']
         response.headers['Location'] = photo_service + filtered_uri
     else:
