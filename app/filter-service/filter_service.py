@@ -2,9 +2,10 @@
 
 import uvicorn
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseSettings
-from models import Fmodel
+from models import PhotoModel
 import requests
 from starlette.responses import Response
 from starlette.middleware.cors import CORSMiddleware
@@ -68,19 +69,23 @@ async def get_filters():
 
 @app.post("/filter", status_code=201)
 async def filter_(response: Response,
-                  body: Fmodel,
+                  body: PhotoModel,
                   type: str = Query(..., regex='|'.join(FILTERS.keys()))):
 
-    photo_uri = body.uri
-    _, display_name, photo_id = photo_uri.split('/')
+    display_name = body.photographer
+    photo_id = body.photo_id
 
-    photo = requests.get(f'{photo_service}/{photo_uri}',
+    photo = requests.get(f'{photo_service}/photo/{display_name}/{photo_id}',
                          timeout=REQUEST_TIMEOUT)
     if photo.status_code != requests.codes.ok:
-        if photo.status_code == requests.codes.unavailable:
-            raise HTTPException(status_code=503, detail="Mongo unavailable")
-        if photo.status_code == requests.codes.not_found:
-            raise HTTPException(status_code=404, detail="Photo Not Found")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "message": "Could not get original photo",
+                "photo_service_status_code": photo.status_code,
+                "photo_service_response_body": photo.content,
+            },
+        )
 
     # save original as file
     with open('tmp_original.jpeg', 'wb') as fp:
@@ -100,8 +105,14 @@ async def filter_(response: Response,
         filtered_uri = photo_response.headers['Location']
         response.headers['Location'] = photo_service + filtered_uri
     else:
-        print(photo_response.status_code)
-        print(photo_response.content)
+        return JSONResponse(
+            status_code=503,
+            content={
+                "message": "Could not upload filtered photo",
+                "photo_service_status_code": photo_response.status_code,
+                "photo_service_response_body": photo_response.content,
+            },
+        )
 
 
 if __name__ == "__main__":

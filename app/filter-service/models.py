@@ -2,5 +2,7 @@
 
 from pydantic import BaseModel
 
-class Fmodel(BaseModel):
-    uri: str
+
+class PhotoModel(BaseModel):
+    photographer: str
+    photo_id: str
