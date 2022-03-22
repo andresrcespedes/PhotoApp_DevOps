@@ -190,7 +190,7 @@ test_filter:
 
 build_filter:
   stage: release
-  # needs: ["test_filter"]
+  needs: ["test_filter"]
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
