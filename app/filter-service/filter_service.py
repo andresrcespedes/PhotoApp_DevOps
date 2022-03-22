@@ -83,7 +83,7 @@ async def filter_(response: Response,
             content={
                 "message": "Could not get original photo",
                 "photo_service_status_code": photo.status_code,
-                "photo_service_response_body": photo.content,
+                "photo_service_response_body": photo.text,
             },
         )
 
@@ -110,7 +110,7 @@ async def filter_(response: Response,
             content={
                 "message": "Could not upload filtered photo",
                 "photo_service_status_code": photo_response.status_code,
-                "photo_service_response_body": photo_response.content,
+                "photo_service_response_body": photo_response.text,
             },
         )
 
